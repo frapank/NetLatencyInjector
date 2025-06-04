@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.5)
+project(lagger)
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+add_executable(lagger ${SOURCES})
+target_include_directories(lagger PRIVATE include)
