@@ -1,6 +1,9 @@
 #pragma once
 
+#include <string>
 class Gui{
   public:
-    void static drawGui();
+    std::string interface;
+    Gui();
+    void drawGui();
 };
