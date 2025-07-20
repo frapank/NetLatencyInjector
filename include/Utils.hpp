@@ -2,8 +2,8 @@
 
 #include <string>
 
-class Utils{
-  public:
+class Utils {
+   public:
     void static checkIfSudo();
     std::string static executeCommand(const char* command);
 };

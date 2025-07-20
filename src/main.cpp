@@ -1,18 +1,15 @@
 #include <unistd.h>
-#include <unistd.h>
 
-#include "../include/Utils.hpp"
 #include "../include/Gui.hpp"
+#include "../include/Utils.hpp"
 
-int main(){
+int main() {
+    Utils::checkIfSudo();
+    Gui gui;
 
-  Utils::checkIfSudo();
-  Gui gui;
+    while (true) {
+        gui.drawGui();
+    }
 
-  while(true){
-    gui.drawGui();
-  }
-
-  return 0;
-
+    return 0;
 }
