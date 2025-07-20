@@ -1,4 +1,4 @@
-#include "../include/Gui.hpp"
+#include "../include/gui.hpp"
 
 #include <unistd.h>
 

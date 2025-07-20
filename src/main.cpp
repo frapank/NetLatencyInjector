@@ -1,7 +1,7 @@
 #include <unistd.h>
 
-#include "../include/Gui.hpp"
-#include "../include/Utils.hpp"
+#include "../include/gui.hpp"
+#include "../include/utils.hpp"
 
 int main() {
     Utils::checkIfSudo();
