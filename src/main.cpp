@@ -1,9 +1,5 @@
-#include <cstdio>
 #include <unistd.h>
-#include <cstdio>
 #include <unistd.h>
-#include <cstdlib>
-#include <cstring>
 
 #include "../include/Utils.hpp"
 #include "../include/Gui.hpp"
