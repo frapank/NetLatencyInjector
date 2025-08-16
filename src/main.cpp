@@ -5,6 +5,7 @@
 
 int main() {
     utils::checkIfSudo();
+    utils::checkTcInstalled();
     Gui gui;
 
     while (true) {
