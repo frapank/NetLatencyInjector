@@ -1,4 +1,4 @@
-# 🕸️ Lagger ![Alpha](https://img.shields.io/badge/Status-Alpha-red)
+# 🕸️ Lagger ![Alpha](https://img.shields.io/badge/Status-Release-green)
 
 **Lagger** is a lightweight Linux utility for injecting artificial network latency using `tc netem`. Designed for developers, testers, or anyone curious about how their apps behave under lag, it provides an intuitive interface for applying, checking, and removing delay on a selected network interface.
 
