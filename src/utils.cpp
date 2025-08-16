@@ -6,7 +6,8 @@
 #include <iostream>
 #include <string>
 
-std::string Utils::executeCommand(const char* command) {
+namespace utils {
+std::string executeCommand(const char* command) {
     FILE* pipe = popen(command, "r");
     std::string output;
 
@@ -29,9 +30,10 @@ std::string Utils::executeCommand(const char* command) {
     return output;
 }
 
-void Utils::checkIfSudo() {
+void checkIfSudo() {
     if (geteuid() != 0) {
         std::cout << "You need to use sudo for this program\n";
         exit(0);
     }
 }
+}  // namespace utils

@@ -3,7 +3,9 @@
 #include <string>
 class Gui {
    public:
-    std::string interface;
     Gui();
     void drawGui();
+
+   private:
+    std::string interface;
 };
