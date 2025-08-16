@@ -4,7 +4,7 @@
 #include "../include/utils.hpp"
 
 int main() {
-    Utils::checkIfSudo();
+    utils::checkIfSudo();
     Gui gui;
 
     while (true) {
