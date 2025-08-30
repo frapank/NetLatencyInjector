@@ -4,6 +4,7 @@
 
 #include <cstdio>
 #include <filesystem>
+#include <memory>
 #include <vector>
 
 namespace utils {
@@ -24,27 +25,25 @@ std::expected<void, std::string> checkTcInstalled() {
 }
 
 std::expected<std::string, std::string> executeCommand(const char* command) {
-    FILE* pipe{popen(command, "r")};
-    std::string output;
+    auto pipeCloser = [](FILE* f) {
+        if (f) pclose(f);
+    };
+
+    std::unique_ptr<FILE, decltype(pipeCloser)> pipe(popen(command, "r"),
+                                                     pipeCloser);
 
     if (!pipe) {
         return std::unexpected(
             std::string{"Can't open pipe for: " + std::string(command) + '\n'});
     }
 
+    std::string output;
     char buffer[256];
-    while (fgets(buffer, sizeof(buffer), pipe)) {
-        output.append(buffer);
-    }
-
-    int ret{pclose(pipe)};
-    if (ret == -1) {
-        return std::unexpected(std::string{
-            "Can't close the pipe: " + std::string(command) + '\n'});
-    }
+    while (fgets(buffer, sizeof(buffer), pipe.get())) output += buffer;
 
     return output;
 }
 
 bool checkIfSudo() { return getuid() == 0; }
+
 }  // namespace utils
