@@ -1,16 +1,24 @@
 #include <unistd.h>
 
-#include "../include/gui.hpp"
-#include "../include/utils.hpp"
+#include <iostream>
+#include <stdexcept>
+
+#include "lagger/gui.hpp"
+#include "lagger/utils.hpp"
 
 int main() {
-    utils::checkIfSudo();
-    utils::checkTcInstalled();
-    Gui gui;
+    if (!utils::checkIfSudo()) {
+        std::cerr << "The program should run as sudo\n";
+        return EXIT_FAILURE;
+    }
 
+    if (auto check = utils::checkTcInstalled(); !check) {
+        std::cerr << check.error() << "\n";
+        return EXIT_FAILURE;
+    }
+
+    Gui gui;
     while (true) {
         gui.drawGui();
     }
-
-    return 0;
 }
