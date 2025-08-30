@@ -11,10 +11,10 @@
 
 #include "lagger/utils.hpp"
 
-void clearGui() { std::system("clear"); }
+void Gui::clearGui() { std::cout << "\033[2J\033[H" << std::flush; }
 
-void removeDelay(const std::string& interface) {
-    auto cmd = "sudo tc qdisc del dev " + interface + " root";
+void Gui::removeDelay() {
+    auto cmd = "sudo tc qdisc del dev " + interface_ + " root";
     auto res = utils::executeCommand(cmd.c_str());
     if (!res) {
         clearGui();
@@ -22,9 +22,9 @@ void removeDelay(const std::string& interface) {
     }
 }
 
-std::string getDelay(const std::string& interface) {
-    auto cmd = "tc qdisc show dev " + interface +
-               " | grep -oP 'delay \\K[0-9.]+ms'";
+std::string Gui::getDelay() {
+    auto cmd =
+        "tc qdisc show dev " + interface_ + " | grep -oP 'delay \\K[0-9.]+ms'";
     auto res = utils::executeCommand(cmd.c_str());
     if (!res || res->empty()) {
         return std::string(color::red) + "No delay" + color::reset;
@@ -32,40 +32,30 @@ std::string getDelay(const std::string& interface) {
     return res.value();
 }
 
-void firstInput(std::string interface) {
+void Gui::setDelay() {
     clearGui();
 
     int time;
     std::cout << "Delay: ";
     std::cin >> time;
-    const auto cmd = "sudo tc qdisc add dev " + interface +
+    const auto cmd = "sudo tc qdisc add dev " + interface_ +
                      " root netem delay " + std::to_string(time) + "ms";
 
     auto res = utils::executeCommand(cmd.c_str());
     if (!res) {
-        removeDelay(interface);
+        removeDelay();
         std::cerr << color::red << res.error() << color::reset << "\n";
     } else {
         std::cout << color::yellow << "New delay set\n" << color::reset;
     }
 }
 
-void secondInput(std::string interface) {
-    clearGui();
-
-    removeDelay(interface);
-    std::cout << color::yellow << "Delay removed! \n" << color::reset;
-
-    clearGui();
-}
-
-char* checkInterface() {
+std::expected<void, std::string> Gui::setupInterface() {
     clearGui();
 
     FILE* pipe{popen("ip -o link show | awk -F': ' '{print $2}'", "r")};
     if (!pipe) {
-        std::cerr << "Failed to list interfaces\n";
-        exit(1);
+        return std::unexpected("Failed to list interfaces");
     }
 
     std::vector<std::string> interfaces;
@@ -80,8 +70,7 @@ char* checkInterface() {
     pclose(pipe);
 
     if (interfaces.empty()) {
-        std::cerr << "No network interfaces found.\n";
-        exit(1);
+        return std::unexpected("No network interfaces foudn");
     }
 
     std::cout << color::yellow << "\nAvailable network interfaces:\n"
@@ -106,19 +95,28 @@ char* checkInterface() {
             break;
     }
 
-    char* selected{new char[interfaces[choice - 1].size() + 1]};
-    std::strcpy(selected, interfaces[choice - 1].c_str());
-    return selected;
+    interface_ = interfaces[choice - 1];
+    return {};
 }
 
-Gui::Gui() { this->interface = checkInterface(); }
+void Gui::start() {
+    if (auto check = setupInterface(); !check) {
+        throw std::runtime_error(check.error());
+        return;
+    }
+
+    running = true;
+    while (running) {
+        drawGui();
+    }
+}
 
 void Gui::drawGui() {
     // Draw gui
     clearGui();
     std::cout << color::yellow << "Lagger settings: \n \n" << color::reset;
-    std::cout << color::blue << " Current delay: " << color::reset
-              << getDelay(interface) << "\n"
+    std::cout << color::blue << " Current delay: " << color::reset << getDelay()
+              << "\n"
               << color::reset;
     std::cout << color::green << " 1) Set new delay \n" << color::reset;
     std::cout << color::green << " 2) Remove current delay \n" << color::reset;
@@ -130,27 +128,21 @@ void Gui::drawGui() {
     if (!(std::cin >> option)) {
         std::cin.clear();
         std::cin.ignore(1000, '\n');
-        drawGui();
         return;
     }
 
-    // Elaborate option
+    // Elaborat
     switch (option) {
-        case 1: {
-            firstInput(interface);
+        case 1:
+            setDelay();
             break;
-        }
-        case 2: {
-            secondInput(interface);
+        case 2:
+            removeDelay();
             break;
-        }
-        case 3: {
+        case 3:
             clearGui();
-            exit(0);
+            running = false;
             break;
-        }
     }
-
-    drawGui();
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <expected>
 
 namespace color {
 constexpr const char* red = "\033[38;2;255;105;97m";
@@ -12,9 +13,16 @@ constexpr const char* reset = "\033[0m";
 
 class Gui {
    public:
-    Gui();
-    void drawGui();
+    void start();
 
    private:
-    std::string interface;
+    std::string getDelay();
+    std::expected<void, std::string> setupInterface();
+    void removeDelay();
+    void setDelay();
+    void clearGui();
+    void drawGui();
+
+    std::string interface_{};
+    bool running = false;
 };
