@@ -17,8 +17,16 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    Gui gui;
-    while (true) {
-        gui.drawGui();
+    try {
+        Gui gui;
+        gui.start();
+    } catch (const std::runtime_error& e) {
+        std::cerr << color::red << "Critical Error: " << e.what()
+                  << color::reset << "\n";
+        return EXIT_FAILURE;
+    } catch (const std::exception& e) {
+        std::cerr << color::red << "Unexpected Error: " << e.what()
+                  << color::reset << "\n";
+        return EXIT_FAILURE;
     }
 }
