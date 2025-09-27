@@ -1,24 +1,23 @@
-# 🕸️ Lagger ![Alpha](https://img.shields.io/badge/Status-Release-green)
+# NetLatencyInjector ![Alpha](https://img.shields.io/badge/Status-Release-green)
 
 **Lagger** is a lightweight Linux utility for injecting artificial network latency using `tc netem`. Designed for developers, testers, or anyone curious about how their apps behave under lag, it provides an intuitive interface for applying, checking, and removing delay on a selected network interface.
 
-## ✨ Features
-- ⏱️ Add custom network delay in milliseconds
-- 🧼 Remove existing delay rules
-- 👀 Check current delay status
-- 🎨 Colored terminal output
-- 🧠 Simple interface built in C++
+## Features
+- Add custom network delay in milliseconds
+- Remove existing delay rules
+- Check current delay status
+- Simple interface built in C++
 
-## 📦 Prerequisites
+## Prerequisites
 - Linux system with `tc` (from the `iproute2` package)
 - `sudo` privileges
 - CMake & a C++ compiler (e.g., `g++`)
 
-## 🚀 Installation
+## Installation
 ```bash
 # Clone the repository
-git clone https://github.com/ItalianG0urmet/net-latency-injector.git
-cd net-latency-injector 
+git clone https://github.com/ItalianG0urmet/NetLatencyInjector.git
+cd NetLatencyInjector
 
 # Build the project
 mkdir build
