@@ -17,10 +17,22 @@ struct ProgramContext {
     interf_sel: usize,
 }
 
+fn run_program() -> Result<(), Box<dyn std::error::Error>> {
+    let ctx = ProgramContext {
+        interf_vec: list_interfaces()?
+            .into_iter()
+            .map(|name| Interface { name })
+            .collect(),
+            interf_sel: 0,
+    };
+
+    Gui::run(ctx)
+}
+
 fn main() -> ExitCode {
     env_logger::init();
 
-    match Gui::run() {
+    match run_program() {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
             error!("{e}");
