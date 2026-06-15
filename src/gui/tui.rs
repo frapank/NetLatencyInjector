@@ -17,7 +17,7 @@ pub struct Gui {
 
 impl Gui {
     pub fn run(ctx: ProgramContext) -> Result<(), Box<dyn Error>> {
-        let mut gui = Self::new(ctx)?;
+        let mut gui = Self::new(ctx);
 
         ratatui::run(|terminal| {
             loop {
@@ -96,7 +96,7 @@ impl Gui {
         Ok(ControlFlow::Continue(()))
     }
 
-    fn new(ctx: ProgramContext) -> Result<Self, Box<dyn std::error::Error>> {
-        Ok(Self { ctx })
+    fn new(ctx: ProgramContext) -> Self {
+        Self { ctx }
     }
 }
