@@ -1,3 +1,4 @@
+mod app;
 mod gui;
 mod utils;
 
@@ -5,17 +6,9 @@ use std::process::ExitCode;
 
 use log::error;
 
-use crate::gui::gui::Gui;
+use app::{Interface, ProgramContext};
+use gui::gui::Gui;
 use utils::list_interfaces;
-
-struct Interface {
-    name: String,
-}
-
-struct ProgramContext {
-    interf_vec: Vec<Interface>,
-    interf_sel: usize,
-}
 
 fn run_program() -> Result<(), Box<dyn std::error::Error>> {
     let ctx = ProgramContext {
@@ -23,7 +16,7 @@ fn run_program() -> Result<(), Box<dyn std::error::Error>> {
             .into_iter()
             .map(|name| Interface { name })
             .collect(),
-            interf_sel: 0,
+        interf_sel: 0,
     };
 
     Gui::run(ctx)
