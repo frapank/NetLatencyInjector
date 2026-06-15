@@ -5,8 +5,11 @@ use ratatui::widgets::{Block, BorderType, Borders, List, ListItem, Paragraph};
 
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use std::error::Error;
+use std::ops::ControlFlow;
 
 use crate::app::ProgramContext;
+
+const TITLE_HEIGHT: u16 = 3;
 
 pub struct Gui {
     ctx: ProgramContext,
@@ -20,7 +23,7 @@ impl Gui {
             loop {
                 terminal.draw(|frame| gui.render(frame))?;
 
-                if gui.handle_events()? {
+                if gui.handle_events()?.is_break() {
                     break Ok::<(), Box<dyn Error>>(());
                 }
             }
@@ -33,7 +36,7 @@ impl Gui {
         let general = Layout::default()
             .direction(ratatui::layout::Direction::Vertical)
             .margin(1)
-            .constraints(vec![Constraint::Length(3), Constraint::Min(0)])
+            .constraints(vec![Constraint::Length(TITLE_HEIGHT), Constraint::Min(0)])
             .split(frame.area());
 
         let rounded = Block::default()
@@ -72,11 +75,11 @@ impl Gui {
         frame.render_widget(list, general[1]);
     }
 
-    pub fn handle_events(&mut self) -> std::io::Result<bool> {
+    pub fn handle_events(&mut self) -> std::io::Result<ControlFlow<()>> {
         match event::read()? {
             Event::Key(key) if key.kind == KeyEventKind::Press => match key.code {
-                KeyCode::Char('q') => return Ok(true),
-                KeyCode::Char('j') => {
+                KeyCode::Char('q') => return Ok(ControlFlow::Break(())),
+                KeyCode::Char('j') if !self.ctx.interf_vec.is_empty() => {
                     self.ctx.interf_sel = (self.ctx.interf_sel + 1) % self.ctx.interf_vec.len();
                 }
                 KeyCode::Char('k') => {
@@ -90,7 +93,7 @@ impl Gui {
             },
             _ => {}
         }
-        Ok(false)
+        Ok(ControlFlow::Continue(()))
     }
 
     fn new(ctx: ProgramContext) -> Result<Self, Box<dyn std::error::Error>> {
