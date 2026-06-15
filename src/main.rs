@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 mod app;
 mod gui;
 mod utils;
