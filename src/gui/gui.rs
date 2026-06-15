@@ -3,10 +3,10 @@ use ratatui::style::{Color, Style};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, BorderType, Borders, List, ListItem, Paragraph};
 
-use crate::ProgramContext;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
-
 use std::error::Error;
+
+use crate::app::ProgramContext;
 
 pub struct Gui {
     ctx: ProgramContext,
@@ -94,7 +94,6 @@ impl Gui {
     }
 
     fn new(ctx: ProgramContext) -> Result<Self, Box<dyn std::error::Error>> {
-        
         Ok(Self { ctx })
     }
 }
