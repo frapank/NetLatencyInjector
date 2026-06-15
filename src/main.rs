@@ -7,7 +7,7 @@ use std::process::ExitCode;
 use log::error;
 
 use app::{Interface, ProgramContext};
-use gui::gui::Gui;
+use gui::tui::Gui;
 use utils::list_interfaces;
 
 fn run_program() -> Result<(), Box<dyn std::error::Error>> {
