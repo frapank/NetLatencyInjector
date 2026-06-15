@@ -3,9 +3,7 @@ use ratatui::style::{Color, Style};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, BorderType, Borders, List, ListItem, Paragraph};
 
-use crate::Interface;
 use crate::ProgramContext;
-use crate::list_interfaces;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 
 use std::error::Error;
@@ -15,8 +13,8 @@ pub struct Gui {
 }
 
 impl Gui {
-    pub fn run() -> Result<(), Box<dyn Error>> {
-        let mut gui = Self::new()?;
+    pub fn run(ctx: ProgramContext) -> Result<(), Box<dyn Error>> {
+        let mut gui = Self::new(ctx)?;
 
         ratatui::run(|terminal| {
             loop {
@@ -95,15 +93,8 @@ impl Gui {
         Ok(false)
     }
 
-    fn new() -> Result<Self, Box<dyn std::error::Error>> {
-        let ctx = ProgramContext {
-            interf_vec: list_interfaces()?
-                .into_iter()
-                .map(|name| Interface { name })
-                .collect(),
-            interf_sel: 0,
-        };
-
+    fn new(ctx: ProgramContext) -> Result<Self, Box<dyn std::error::Error>> {
+        
         Ok(Self { ctx })
     }
 }
