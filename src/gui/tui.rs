@@ -57,7 +57,7 @@ impl Gui {
             .enumerate()
             .map(|(idx, interf)| {
                 if idx == self.ctx.interf_sel {
-                    ListItem::new(Line::from(format!("> {}", interf.name)))
+                    ListItem::new(Line::from(format!(" > {} [{}ms]", interf.name, interf.delay)))
                         .style(Style::default().fg(Color::Black).bg(Color::LightBlue))
                 } else {
                     ListItem::new(Line::from(format!("  {}", interf.name)))
