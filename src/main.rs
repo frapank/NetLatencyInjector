@@ -12,7 +12,7 @@ use app::ProgramContext;
 use gui::tui::Gui;
 
 fn run_program() -> Result<(), Box<dyn std::error::Error>> {
-    let ctx = ProgramContext::new()?; 
+    let ctx = ProgramContext::new()?;
 
     Gui::run(ctx)
 }

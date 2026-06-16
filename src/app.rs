@@ -1,9 +1,9 @@
-use crate::utils::list_interfaces;
 use crate::utils::get_delay;
+use crate::utils::list_interfaces;
 
 pub struct Interface {
     pub name: String,
-    pub delay: u32
+    pub delay: u32,
 }
 
 pub struct ProgramContext {

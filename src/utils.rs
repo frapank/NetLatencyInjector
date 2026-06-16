@@ -1,5 +1,5 @@
-use thiserror::Error;
 use std::process::Command;
+use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum NetemError {
@@ -27,7 +27,7 @@ pub fn get_delay(iface: &str) -> Result<Option<u32>, NetemError> {
 
     if !output.status.success() {
         return Err(NetemError::TcExitError(
-                String::from_utf8_lossy(&output.stderr).into_owned(),
+            String::from_utf8_lossy(&output.stderr).into_owned(),
         ));
     }
 
@@ -48,19 +48,27 @@ pub fn get_delay(iface: &str) -> Result<Option<u32>, NetemError> {
     }
 
     Ok(None)
-
 }
 
 pub fn set_delay(iface: &str, ms: u32) -> Result<(), NetemError> {
     let delay = format!("{ms}ms");
 
     let output = Command::new("tc")
-        .args(["qdisc", "replace", "dev", iface, "root", "netem", "delay", delay.as_str()])
+        .args([
+            "qdisc",
+            "replace",
+            "dev",
+            iface,
+            "root",
+            "netem",
+            "delay",
+            delay.as_str(),
+        ])
         .output()?;
 
     if !output.status.success() {
         return Err(NetemError::TcExitError(
-                String::from_utf8_lossy(&output.stderr).into_owned(),
+            String::from_utf8_lossy(&output.stderr).into_owned(),
         ));
     }
 
