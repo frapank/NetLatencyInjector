@@ -74,17 +74,3 @@ pub fn set_delay(iface: &str, ms: u32) -> Result<(), NetemError> {
 
     Ok(())
 }
-
-pub fn clear_delay(iface: &str) -> Result<(), NetemError> {
-    let output = Command::new("tc")
-        .args(["qdisc", "del", "dev", iface, "root"])
-        .output()?;
-
-    if !output.status.success() {
-        return Err(NetemError::TcExitError(
-            String::from_utf8_lossy(&output.stderr).into_owned(),
-        ));
-    }
-
-    Ok(())
-}
