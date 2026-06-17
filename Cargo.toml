@@ -1,11 +1,11 @@
 [package]
-name = "MemMapExplorer"
-version = "0.1.0"
-edition = "2024"
+name = "NetLatencyInjector"
+version = "1.0"
+edition = "2026"
 
 [dependencies]
 crossterm = "0.29.0"
+ratatui = "0.30.1"
 env_logger = "0.11.10"
 log = "0.4.32"
-ratatui = "0.30.1"
 thiserror = "2.0.18"
