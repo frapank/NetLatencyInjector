@@ -1,12 +1,12 @@
+use crate::app::ProgramContext;
+use crate::utils::{NetemError, set_delay};
+use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use ratatui::layout::{Alignment, Constraint, Layout, Rect};
 use ratatui::style::{Color, Style};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, BorderType, Borders, Clear, List, ListItem, Paragraph};
-use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use std::error::Error;
 use std::ops::ControlFlow;
-use crate::app::ProgramContext;
-use crate::utils::{set_delay, NetemError};
 
 const TITLE_HEIGHT: u16 = 3;
 
@@ -55,8 +55,11 @@ impl Gui {
             .enumerate()
             .map(|(idx, interf)| {
                 if idx == self.ctx.interf_sel {
-                    ListItem::new(Line::from(format!(" > {} [{}ms]", interf.name, interf.delay)))
-                        .style(Style::default().fg(Color::Black).bg(Color::LightBlue))
+                    ListItem::new(Line::from(format!(
+                        " > {} [{}ms]",
+                        interf.name, interf.delay
+                    )))
+                    .style(Style::default().fg(Color::Black).bg(Color::LightBlue))
                 } else {
                     ListItem::new(Line::from(format!("  {}", interf.name)))
                 }
