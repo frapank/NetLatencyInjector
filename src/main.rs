@@ -4,8 +4,8 @@ mod app;
 mod gui;
 mod utils;
 
-use std::process::ExitCode;
 use std::env;
+use std::process::ExitCode;
 
 use log::error;
 
