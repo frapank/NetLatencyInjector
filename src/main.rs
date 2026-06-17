@@ -4,7 +4,7 @@ mod app;
 mod gui;
 mod utils;
 
-use std::env;
+use nix::unistd::Uid;
 use std::process::ExitCode;
 
 use log::error;
@@ -21,8 +21,8 @@ fn run_program() -> Result<(), Box<dyn std::error::Error>> {
 fn main() -> ExitCode {
     env_logger::init();
 
-    if env::var("SUDO_USER").is_err() {
-        error!("Program require root privilege");
+    if !Uid::effective().is_root() {
+        error!("Program requires root privileges");
         return ExitCode::FAILURE;
     }
 
