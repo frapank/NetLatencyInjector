@@ -5,6 +5,7 @@ mod gui;
 mod utils;
 
 use std::process::ExitCode;
+use std::env;
 
 use log::error;
 
@@ -19,6 +20,11 @@ fn run_program() -> Result<(), Box<dyn std::error::Error>> {
 
 fn main() -> ExitCode {
     env_logger::init();
+
+    if env::var("SUDO_USER").is_err() {
+        error!("Program require root privilege");
+        return ExitCode::FAILURE;
+    }
 
     match run_program() {
         Ok(()) => ExitCode::SUCCESS,
