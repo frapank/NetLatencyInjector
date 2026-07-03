@@ -4,7 +4,7 @@ use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use ratatui::layout::{Alignment, Constraint, Layout, Rect};
 use ratatui::style::{Color, Style};
 use ratatui::text::Line;
-use ratatui::widgets::{Block, BorderType, Borders, Clear, List, ListItem, Paragraph};
+use ratatui::widgets::{Block, BorderType, Borders, Clear, List, ListItem, ListState, Paragraph};
 use std::error::Error;
 use std::ops::ControlFlow;
 
@@ -55,25 +55,30 @@ impl Gui {
             .enumerate()
             .map(|(idx, interf)| {
                 if idx == self.ctx.interf_sel {
-                    ListItem::new(Line::from(format!(
-                        " > {} [{}ms]",
-                        interf.name, interf.delay
-                    )))
-                    .style(Style::default().fg(Color::Black).bg(Color::LightBlue))
+                    ListItem::new(Line::from(format!("{} [{}ms]", interf.name, interf.delay)))
                 } else {
-                    ListItem::new(Line::from(format!("  {}", interf.name)))
+                    ListItem::new(Line::from(interf.name.clone()))
                 }
             })
             .collect();
 
-        frame.render_widget(
-            List::new(items).block(
-                Block::default()
-                    .borders(Borders::ALL)
-                    .border_type(BorderType::Rounded)
-                    .title(" Interfaces "),
-            ),
+        let mut state = ListState::default();
+        if !self.ctx.interf_vec.is_empty() {
+            state.select(Some(self.ctx.interf_sel));
+        }
+
+        frame.render_stateful_widget(
+            List::new(items)
+                .block(
+                    Block::default()
+                        .borders(Borders::ALL)
+                        .border_type(BorderType::Rounded)
+                        .title(" Interfaces "),
+                )
+                .highlight_style(Style::default().fg(Color::Black).bg(Color::LightBlue))
+                .highlight_symbol("> "),
             general[1],
+            &mut state,
         );
 
         if self.popup_open {
@@ -123,13 +128,13 @@ impl Gui {
                                 if let Some(iface) =
                                     self.ctx.interf_vec.get_mut(self.ctx.interf_sel)
                                 {
-                                    iface.delay = delay;
-                                    if let Err(error) = set_delay(&iface.name, delay) {
-                                        return Err(error);
+                                    match set_delay(&iface.name, delay) {
+                                        Ok(()) => iface.delay = delay,
+                                        Err(error) => log::error!("{error}"),
                                     }
                                 }
+                                self.close_popup();
                             }
-                            self.close_popup();
                         }
                         KeyCode::Esc => self.close_popup(),
                         KeyCode::Backspace => {
