@@ -133,8 +133,8 @@ impl Gui {
                                         Err(error) => log::error!("{error}"),
                                     }
                                 }
+                                self.close_popup();
                             }
-                            self.close_popup();
                         }
                         KeyCode::Esc => self.close_popup(),
                         KeyCode::Backspace => {
