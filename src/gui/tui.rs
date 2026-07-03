@@ -123,9 +123,9 @@ impl Gui {
                                 if let Some(iface) =
                                     self.ctx.interf_vec.get_mut(self.ctx.interf_sel)
                                 {
-                                    iface.delay = delay;
-                                    if let Err(error) = set_delay(&iface.name, delay) {
-                                        return Err(error);
+                                    match set_delay(&iface.name, delay) {
+                                        Ok(()) => iface.delay = delay,
+                                        Err(error) => log::error!("{error}"),
                                     }
                                 }
                             }
